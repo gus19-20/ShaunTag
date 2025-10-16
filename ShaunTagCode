@@ -47,6 +47,9 @@ function love.mousepressed(x, y, button, istouch)
       math.random(); math.random(); math.random()
       speed = 0.1 --speed of sheep
       powerUpTime = powerUpStart --sets powerUpTime back to its max time
+
+      dogStartx = math.random(0, love.graphics.getWidth() - dogFace:getWidth())
+      dogStarty = math.random(0, love.graphics.getHeight(), dogFace:getHeight() * 2) --new random position
     end
   end
 end
