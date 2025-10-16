@@ -1,0 +1,85 @@
+--game where animals fall from top player clicks
+--before hit the bottom
+--game ends when animal hits bottom
+
+function love.load()
+  shaunFace = love.graphics.newImage("Shaun.PNG")
+  backgroundImage = love.graphics.newImage("bg.png")
+  dogFace = love.graphics.newImage("Dog.PNG")
+  speed = 1.0
+  math.randomseed(os.time())
+  math.random(); math.random(); math.random()
+  powerUpStart = math.random(500, 1000)
+  powerUpTime = powerUpStart
+  startx = {math.random(0, love.graphics.getWidth() - shaunFace:getWidth()), 
+            math.random(0, love.graphics.getWidth() - shaunFace:getWidth()),  
+            math.random(0, love.graphics.getWidth() - shaunFace:getWidth()),  
+            math.random(0, love.graphics.getWidth() - shaunFace:getWidth()), 
+            math.random(0, love.graphics.getWidth() - shaunFace:getWidth())}
+  starty = {0 - math.random(shaunFace:getHeight(), shaunFace:getHeight() * 2),
+            0 - math.random(shaunFace:getHeight(), shaunFace:getHeight() * 2),
+            0 - math.random(shaunFace:getHeight(), shaunFace:getHeight() * 2),
+            0 - math.random(shaunFace:getHeight(), shaunFace:getHeight() * 2),
+            0 - math.random(shaunFace:getHeight(), shaunFace:getHeight() * 2)}
+
+  dogStartx = math.random(0, love.graphics.getWidth() - dogFace:getWidth())
+  dogStarty = math.random(0, love.graphics.getHeight(), dogFace:getHeight() * 2)
+end
+
+-------------------------------------------------
+--MOUSE PRESS
+--1 = left, 2 = right, 3 = middle wheel
+-------------------------------------------------
+function love.mousepressed(x, y, button, istouch)
+  if button == 1 then
+    --print("left mouse clicked")
+    for i, v in ipairs(startx) do
+      if x >= startx[i] and x <= startx[i] + shaunFace:getWidth() and y >= starty[i] and y <= starty[i] + shaunFace:getHeight() then
+        --print("in bounds")
+        math.randomseed(os.time())
+        math.random(); math.random(); math.random()
+        starty[i] = math.random(shaunFace:getHeight(), shaunFace:getHeight() * 2) * -1
+      end
+    end
+    if x >= dogStartx and x <= dogStartx + dogFace:getWidth() and y >= dogStarty and y <= dogStarty + dogFace:getHeight() and powerUpTime == 0 then
+      --print("in bounds")
+      math.randomseed(os.time())
+      math.random(); math.random(); math.random()
+      speed = 0
+      powerUpTime = powerUpStart
+    end
+  end
+end
+
+-------------------------------------------------
+--UPDATE
+-------------------------------------------------
+function love.update(dt)
+  for i, v in ipairs(starty) do
+    if starty[i] + shaunFace:getHeight() >= love.graphics.getHeight() then
+      --print("over the edge")
+      love.event.quit()
+    end
+    starty[i] = starty[i] + (80 * speed) * dt
+  end
+  if powerUpTime > 0 then
+    powerUpTime = powerUpTime - 1
+    if powerUpTime == powerUpStart/2 then
+      speed = 1
+    end
+  end
+  print(powerUpTime)
+end
+
+-------------------------------------------------
+--DRAW
+-------------------------------------------------
+function love.draw()
+  love.graphics.draw(backgroundImage, 0, 0)
+  for i, v in ipairs(startx) do
+    love.graphics.draw(shaunFace, startx[i], starty[i])
+  end
+  if powerUpTime <= 0 then
+    love.graphics.draw(dogFace, dogStartx, dogStarty)
+  end
+end
