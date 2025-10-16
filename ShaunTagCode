@@ -41,12 +41,12 @@ function love.mousepressed(x, y, button, istouch)
         starty[i] = math.random(shaunFace:getHeight(), shaunFace:getHeight() * 2) * -1
       end
     end
-    if x >= dogStartx and x <= dogStartx + dogFace:getWidth() and y >= dogStarty and y <= dogStarty + dogFace:getHeight() and powerUpTime == 0 then
-      --print("in bounds")
+    if x >= dogStartx and x <= dogStartx + dogFace:getWidth() and y >= dogStarty and y <= dogStarty + dogFace:getHeight() and powerUpTime == 0 then --If powerUpTime is 0
+      --and dog is clicked then this code block executes
       math.randomseed(os.time())
       math.random(); math.random(); math.random()
-      speed = 0
-      powerUpTime = powerUpStart
+      speed = 0.1 --speed of sheep
+      powerUpTime = powerUpStart --sets powerUpTime back to its max time
     end
   end
 end
@@ -64,7 +64,7 @@ function love.update(dt)
   end
   if powerUpTime > 0 then
     powerUpTime = powerUpTime - 1
-    if powerUpTime == powerUpStart/2 then
+    if powerUpTime <= powerUpStart/2 then
       speed = 1
     end
   end
@@ -80,6 +80,6 @@ function love.draw()
     love.graphics.draw(shaunFace, startx[i], starty[i])
   end
   if powerUpTime <= 0 then
-    love.graphics.draw(dogFace, dogStartx, dogStarty)
+    love.graphics.draw(dogFace, dogStartx, dogStarty) --draws dogFace at (dogStartx, dogStartY)
   end
 end
